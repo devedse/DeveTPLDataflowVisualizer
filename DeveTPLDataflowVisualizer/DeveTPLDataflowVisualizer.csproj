@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <AssemblyName>DeveTPLDataflowVisualizer</AssemblyName>
+    <PackageId>DeveTPLDataflowVisualizer</PackageId>
+    <Title>DeveTPLDataflowVisualizer</Title>
+    <Authors>Devedse</Authors>
+    <Description>This is a library to easily visualize the progress of a TPL Dataflow in a Console application.</Description>
+    <PackageProjectUrl>https://github.com/devedse/DeveTPLDataflowVisualizer</PackageProjectUrl>
+    <PackageTags>csharp;tpl;dataflow;visualizer;console</PackageTags>
+
+    <!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+    <!-- Optional: Embed source files that are not tracked by the source control manager in the PDB -->
+    <EmbedUntrackedSources>false</EmbedUntrackedSources>
+
+    <!-- Optional: Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageIcon>Icon256.png</PackageIcon>
+    <ApplicationIcon>Icon256.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Spectre.Console" Version="0.46.0" />
+  </ItemGroup>
+
+</Project>

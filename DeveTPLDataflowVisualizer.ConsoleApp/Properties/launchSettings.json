@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "DeveTPLDataflowVisualizer.ConsoleApp": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
