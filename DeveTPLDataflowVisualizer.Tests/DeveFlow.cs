@@ -14,9 +14,9 @@ namespace DeveTPLDataflowVisualizer.Tests
         public async Task FlowWorksAsExpected()
         {
             //Arrange
-            var b1_extractFramesFromVideo = new DeveTransformManyBlock<int, string>("Video -> Frame", (videoProcessOptions) =>
+            var b1_extractFramesFromVideo = new DeveTransformManyBlock<int, string>("Video -> Frame", (input) =>
             {
-                return Enumerable.Range(0, 30).Select(t => $"Super test: {t}");
+                return Enumerable.Range(0, input).Select(t => $"Super test: {t}");
             }, new ExecutionDataflowBlockOptions()
             {
                 MaxDegreeOfParallelism = 1,
