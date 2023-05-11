@@ -1,7 +1,10 @@
-﻿using DLPR.Detection.WholeFlow.TPLDataflowWrappers;
+﻿using DLPR.Detection.WholeFlow.ConsoleVisualizer;
+using DLPR.Detection.WholeFlow.TPLDataflowWrappers;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -121,6 +124,27 @@ namespace DeveTPLDataflowVisualizer.ConsoleApp
             b4_licensePlateExtraInfoDetector.LinkTo(b4_broadcast, new DataflowLinkOptions { PropagateCompletion = true });
             b4_broadcast.LinkTo(b5_storeFramesToVideo, new DataflowLinkOptions { PropagateCompletion = true });
             b4_broadcast.LinkTo(b4_post_saveLicensePlatesToImage, new DataflowLinkOptions { PropagateCompletion = true });
+
+
+
+            _ = Task.Run(async () =>
+            {
+                var baume = new Tree("Root");
+                var baumeNode = new TreeNode(new Text("RootNode"));
+                baume.AddNode(baumeNode);
+                AnsiConsole.Live(baume)
+                    .Start(ctx =>
+                    {
+                        while (true)
+                        {
+                            baumeNode.Nodes.Clear();
+                            SpectreConsoleRenderer.SuperBaumenMacher(b1_extractFramesFromVideo, baumeNode, (block) => block == b1_extractFramesFromVideo ? 1 : b1_broadcast.ProcessedCount);
+                            //var baumeTakke = b2_findBoxes.CreateBeautifulBarChart();
+                            ctx.Refresh();
+                            Thread.Sleep(50);
+                        }
+                    });
+            });
 
 
 
