@@ -45,7 +45,7 @@ jobs:
       run: |
         export VERSION=1.0.${{needs.generate_version_number.outputs.build_number}}
         echo Version: $VERSION
-        docker buildx build -f DeveTPLDataflowVisualizer.ConsoleApp/Dockerfile --build-arg BUILD_VERSION=$VERSION --platform linux/arm,linux/arm64,linux/amd64 -t devedse/devetpldataflowvisualizerconsoleapp:${{needs.generate_version_number.outputs.build_number}} -t devedse/devetpldataflowvisualizerconsoleapp:latest ${{ github.ref == 'refs/heads/master' && '--push' || '' }} .
+        docker buildx build -f DeveTPLDataflowVisualizer.ConsoleApp/Dockerfile --build-arg BUILD_VERSION=$VERSION --platform linux/arm64,linux/amd64 -t devedse/devetpldataflowvisualizerconsoleapp:${{needs.generate_version_number.outputs.build_number}} -t devedse/devetpldataflowvisualizerconsoleapp:latest ${{ github.ref == 'refs/heads/master' && '--push' || '' }} .
 
   intellicode:
     needs: generate_version_number
