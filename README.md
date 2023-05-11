@@ -20,7 +20,7 @@ This is a library to easily visualize the progress of a TPL Dataflow in a Consol
 
 | Docker Hub |
 |:----------:|
-| [![Docker pulls](https://img.shields.io/docker/v/devedse/devetpldataflowvisualizerweb)](https://hub.docker.com/r/devedse/devetpldataflowvisualizerweb/) |
+| [![Docker pulls](https://img.shields.io/docker/v/devedse/devetpldataflowvisualizerconsoleapp)](https://hub.docker.com/r/devedse/devetpldataflowvisualizerconsoleapp/) |
 
 ## Code Coverage Status
 
