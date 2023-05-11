@@ -1,9 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>DeveTPLDataflowVisualizer.ConsoleApp</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>DeveTPLDataflowVisualizer</PackageId>
     <TargetFramework>net7.0</TargetFramework>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <ApplicationIcon>Icon256.ico</ApplicationIcon>
