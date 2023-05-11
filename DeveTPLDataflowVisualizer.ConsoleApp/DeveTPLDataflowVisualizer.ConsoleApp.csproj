@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>DeveMazeGenerator.ConsoleApp</AssemblyName>
+    <AssemblyName>DeveTPLDataflowVisualizer.ConsoleApp</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>DeveMazeGeneratorConsole</PackageId>
+    <PackageId>DeveTPLDataflowVisualizer</PackageId>
     <TargetFramework>net7.0</TargetFramework>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <ApplicationIcon>Icon256.ico</ApplicationIcon>

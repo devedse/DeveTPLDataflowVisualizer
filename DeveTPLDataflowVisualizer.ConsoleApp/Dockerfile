@@ -20,4 +20,4 @@ RUN dotnet publish "DeveTPLDataflowVisualizer.ConsoleApp.csproj" -c Release -o /
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "DeveMazeGenerator.ConsoleApp.dll"]
+ENTRYPOINT ["dotnet", "DeveTPLDataflowVisualizer.ConsoleApp.dll"]

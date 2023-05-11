@@ -47,40 +47,6 @@ jobs:
         echo Version: $VERSION
         docker buildx build -f DeveTPLDataflowVisualizer.Web/Dockerfile --build-arg BUILD_VERSION=$VERSION --platform linux/arm,linux/arm64,linux/amd64 -t devedse/devetpldataflowvisualizerweb:${{needs.generate_version_number.outputs.build_number}} -t devedse/devetpldataflowvisualizerweb:latest ${{ github.ref == 'refs/heads/master' && '--push' || '' }} .
 
-  build_docker_monogame_blazor:
-    needs: generate_version_number
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Login to Docker Hub
-      if: github.ref == 'refs/heads/master'
-      uses: docker/login-action@v2
-      with:
-        username: devedse
-        password: ${{ secrets.DOCKERHUBTOKEN }}
-    - name: Set up QEMU
-      id: qemu
-      uses: docker/setup-qemu-action@v2
-      with:
-        image: tonistiigi/binfmt:latest
-        platforms: all
-    - name: Available platforms
-      run: echo ${{ steps.qemu.outputs.platforms }}
-    - name: Set up Docker Buildx
-      id: buildx
-      uses: docker/setup-buildx-action@v2
-    - name: Builder instance name
-      run: echo ${{ steps.buildx.outputs.name }}
-    - name: Available platforms
-      run: echo ${{ steps.buildx.outputs.platforms }}
-    - name: Run Buildx
-      run: |
-        export VERSION=1.0.${{needs.generate_version_number.outputs.build_number}}
-        echo Version: $VERSION
-        docker buildx build -f DeveTPLDataflowVisualizer.MonoGame.Blazor/Dockerfile --build-arg BUILD_VERSION=$VERSION --platform linux/arm64,linux/amd64 -t devedse/devetpldataflowvisualizermonogameblazor:${{needs.generate_version_number.outputs.build_number}} -t devedse/devetpldataflowvisualizermonogameblazor:latest ${{ github.ref == 'refs/heads/master' && '--push' || '' }} .
-
-
-
   intellicode:
     needs: generate_version_number
     runs-on: windows-latest
@@ -132,9 +98,9 @@ jobs:
       shell: bash
       run: |
         mkdir BuildOutputConsole
-        mv ./DeveTPLDataflowVisualizer.ConsoleApp/bin/Release/net7.0/win-x64/publishuntrimmed/DeveMazeGenerator.ConsoleApp.exe ./BuildOutputConsole/DeveMazeGenerator.ConsoleApp.Untrimmed.exe
-        mv ./DeveTPLDataflowVisualizer.ConsoleApp/bin/Release/net7.0/win-x64/publishtrimmed/DeveMazeGenerator.ConsoleApp.exe ./BuildOutputConsole/DeveMazeGenerator.ConsoleApp.Trimmed.exe
-        mv ./DeveTPLDataflowVisualizer.ConsoleApp/bin/Release/net7.0/win-x64/publishtrimmedaot/DeveMazeGenerator.ConsoleApp.exe ./BuildOutputConsole/DeveMazeGenerator.ConsoleApp.TrimmedAot.exe
+        mv ./DeveTPLDataflowVisualizer.ConsoleApp/bin/Release/net7.0/win-x64/publishuntrimmed/DeveTPLDataflowVisualizer.ConsoleApp.exe ./BuildOutputConsole/DeveTPLDataflowVisualizer.ConsoleApp.Untrimmed.exe
+        mv ./DeveTPLDataflowVisualizer.ConsoleApp/bin/Release/net7.0/win-x64/publishtrimmed/DeveTPLDataflowVisualizer.ConsoleApp.exe ./BuildOutputConsole/DeveTPLDataflowVisualizer.ConsoleApp.Trimmed.exe
+        mv ./DeveTPLDataflowVisualizer.ConsoleApp/bin/Release/net7.0/win-x64/publishtrimmedaot/DeveTPLDataflowVisualizer.ConsoleApp.exe ./BuildOutputConsole/DeveTPLDataflowVisualizer.ConsoleApp.TrimmedAot.exe
     - uses: actions/upload-artifact@v3
       with:
         name: DeveTPLDataflowVisualizer.ConsoleApp
@@ -163,7 +129,7 @@ jobs:
       run: dotnet restore DeveTPLDataflowVisualizer.sln
     - name: SonarQube begin
       if: github.actor != 'dependabot[bot]'
-      run: dotnet-sonarscanner begin /k:"DeveTPLDataflowVisualizer" /o:"devedse-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login=${{secrets.SONARQUBETOKEN}} /d:sonar.cs.opencover.reportsPaths=".\DeveTPLDataflowVisualizer.Tests\TestResults\Coverage\coverage.opencover.xml" /d:sonar.coverage.exclusions="DeveTPLDataflowVisualizer.ConsoleApp/**/*.cs,DeveTPLDataflowVisualizer.Tests/**/*.cs,DeveTPLDataflowVisualizer.Web/wwwroot/divisionmaze/**/*.js"
+      run: dotnet-sonarscanner begin /k:"DeveTPLDataflowVisualizer" /o:"devedse-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login=${{secrets.SONARQUBETOKEN}} /d:sonar.cs.opencover.reportsPaths=".\DeveTPLDataflowVisualizer.Tests\TestResults\Coverage\coverage.opencover.xml" /d:sonar.coverage.exclusions="DeveTPLDataflowVisualizer.ConsoleApp/**/*.cs,DeveTPLDataflowVisualizer.Tests/**/*.cs"
     - name: Build
       run: dotnet build DeveTPLDataflowVisualizer.sln -c Release --no-restore /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
     - name: Test
@@ -202,235 +168,6 @@ jobs:
           ./DeveTPLDataflowVisualizer/bin/Release/*.nupkg
           ./DeveTPLDataflowVisualizer/bin/Release/*.snupkg
 
-  build_linux_monogame_desktopgl:
-    needs: generate_version_number
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 7.0.x
-    - name: Install dependencies
-      run: dotnet restore DeveTPLDataflowVisualizer.sln
-    - name: Build
-      run: dotnet build DeveTPLDataflowVisualizer.sln -c Release --no-restore /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
-    - name: Test
-      run: dotnet test DeveTPLDataflowVisualizer.sln --no-restore --verbosity normal
-    - name: Publish
-      run: dotnet publish ./DeveTPLDataflowVisualizer.MonoGame.DesktopGL/DeveTPLDataflowVisualizer.MonoGame.DesktopGL.csproj -r linux-x64 -c Release /p:PublishSingleFile=true /p:SelfContained=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishTrimmed=false /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
-    - name: Copy files that are missing for some reason
-      run: |
-        # not needed on linux as it seems
-        ls -R DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/linux-x64
-        ls -R DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/linux-x64/publish
-      shell: bash
-    - name: targz output
-      run: |
-        export GZIP=-9
-        tar cvzf DeveTPLDataflowVisualizer.MonoGame.DesktopGL_linux-x64.tar.gz -C DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/linux-x64/publish .
-    - name: 7zip output
-      run: |
-        7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=1536m -mfb=273 -ms=on -mqs=on -sccUTF-8 "DeveTPLDataflowVisualizer.MonoGame.DesktopGL_linux-x64.7z" "./DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/linux-x64/publish/*" '-x!*.pdb'
-    - uses: actions/upload-artifact@v3
-      with:
-        name: DeveTPLDataflowVisualizer.MonoGame.DesktopGL_linux-x64
-        path: DeveTPLDataflowVisualizer.MonoGame.DesktopGL_linux-x64.tar.gz
-
-  # AppIcon is missing when building windows application on linux
-  # So don't use this build
-  # See: https://github.com/dotnet/runtime/issues/3828
-  build_windows_monogame_desktopgl_onlinux:
-    needs: generate_version_number
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 7.0.x
-    - name: Install dependencies
-      run: dotnet restore DeveTPLDataflowVisualizer.sln
-    - name: Build
-      run: dotnet build DeveTPLDataflowVisualizer.sln -c Release --no-restore /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
-    - name: Test
-      run: dotnet test DeveTPLDataflowVisualizer.sln --no-restore --verbosity normal
-    - name: Publish
-      run: dotnet publish ./DeveTPLDataflowVisualizer.MonoGame.DesktopGL/DeveTPLDataflowVisualizer.MonoGame.DesktopGL.csproj -r win-x64 -c Release /p:PublishSingleFile=true /p:SelfContained=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishTrimmed=false /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
-    - name: Copy files that are missing for some reason
-      run: |
-        # not needed on linux as it seems
-        ls -R DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/win-x64
-        cp DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/win-x64/SDL2.dll DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/win-x64/publish/
-        cp -R DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/win-x64/Content/. DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/win-x64/publish/Content/
-        ls -R DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/win-x64/publish
-      shell: bash
-    - name: targz output
-      run: |
-        export GZIP=-9
-        tar cvzf DeveTPLDataflowVisualizer.MonoGame.DesktopGL_win-x64_onlinux.tar.gz -C DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/win-x64/publish .
-    - name: 7zip output
-      run: |
-        7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=1536m -mfb=273 -ms=on -mqs=on -sccUTF-8 "DeveTPLDataflowVisualizer.MonoGame.DesktopGL_win-x64_onlinux.7z" "./DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/win-x64/publish/*" '-x!*.pdb'
-    - uses: actions/upload-artifact@v3
-      with:
-        name: DeveTPLDataflowVisualizer.MonoGame.DesktopGL_win-x64_onlinuxtargz
-        path: DeveTPLDataflowVisualizer.MonoGame.DesktopGL_win-x64_onlinux.tar.gz
-    - uses: actions/upload-artifact@v3
-      with:
-        name: DeveTPLDataflowVisualizer.MonoGame.DesktopGL_win-x64_onlinux
-        path: DeveTPLDataflowVisualizer.MonoGame.DesktopGL_win-x64_onlinux.7z
-
-  build_windows_monogame_desktopgl:
-    needs: generate_version_number
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 7.0.x
-    - name: Install dependencies
-      run: dotnet restore DeveTPLDataflowVisualizer.sln
-    - name: Build
-      run: dotnet build DeveTPLDataflowVisualizer.sln -c Release --no-restore /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
-    - name: Test
-      run: dotnet test DeveTPLDataflowVisualizer.sln --no-restore --verbosity normal
-    - name: Publish
-      run: dotnet publish ./DeveTPLDataflowVisualizer.MonoGame.DesktopGL/DeveTPLDataflowVisualizer.MonoGame.DesktopGL.csproj -r win-x64 -c Release /p:PublishSingleFile=true /p:SelfContained=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishTrimmed=false /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
-    - name: Copy files that are missing for some reason
-      run: |
-        ls -R DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/win-x64
-        cp DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/win-x64/SDL2.dll DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/win-x64/publish/
-        cp -R DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/win-x64/Content/. DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/win-x64/publish/Content/
-        ls -R DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/win-x64/Publish
-      shell: bash
-    - name: 7zip output
-      run: |
-        7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=1536m -mfb=273 -ms=on -mqs=on -sccUTF-8 "DeveTPLDataflowVisualizer.MonoGame.DesktopGL_win-x64.7z" "./DeveTPLDataflowVisualizer.MonoGame.DesktopGL/bin/Release/net7.0/win-x64/Publish/*" '-x!*.pdb'
-    - uses: actions/upload-artifact@v3
-      with:
-        name: DeveTPLDataflowVisualizer.MonoGame.DesktopGL_win-x64
-        path: DeveTPLDataflowVisualizer.MonoGame.DesktopGL_win-x64.7z
-
-  build_windows_monogame_windowsdx:
-    needs: generate_version_number
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 7.0.x
-    - name: Install dependencies
-      run: dotnet restore DeveTPLDataflowVisualizer.sln
-    - name: Build
-      run: dotnet build DeveTPLDataflowVisualizer.sln -c Release --no-restore /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
-    - name: Test
-      run: dotnet test DeveTPLDataflowVisualizer.sln --no-restore --verbosity normal
-    - name: Publish
-      run: dotnet publish ./DeveTPLDataflowVisualizer.MonoGame.WindowsDX\DeveTPLDataflowVisualizer.MonoGame.WindowsDX.csproj -r win-x64 -c Release /p:PublishSingleFile=true /p:SelfContained=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishTrimmed=false /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
-    - name: Copy files that are missing for some reason
-      run: |
-        ls -R DeveTPLDataflowVisualizer.MonoGame.WindowsDX/bin/Release/net7.0-windows/win-x64
-        cp -R DeveTPLDataflowVisualizer.MonoGame.WindowsDX/bin/Release/net7.0-windows/win-x64/Content/. DeveTPLDataflowVisualizer.MonoGame.WindowsDX/bin/Release/net7.0-windows/win-x64/publish/Content/
-        ls -R DeveTPLDataflowVisualizer.MonoGame.WindowsDX/bin/Release/net7.0-windows/win-x64/Publish
-      shell: bash
-    - name: 7zip output
-      run: |
-        7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=1536m -mfb=273 -ms=on -mqs=on -sccUTF-8 "DeveTPLDataflowVisualizer.MonoGame.WindowsDX_win-x64.7z" "./DeveTPLDataflowVisualizer.MonoGame.WindowsDX/bin/Release/net7.0-windows/win-x64/Publish/*" '-x!*.pdb'
-    - uses: actions/upload-artifact@v3
-      with:
-        name: DeveTPLDataflowVisualizer.MonoGame.WindowsDX_win-x64
-        path: DeveTPLDataflowVisualizer.MonoGame.WindowsDX_win-x64.7z
-
-
-  build_windows_Android:
-    needs: generate_version_number
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 7.0.x
-    - name: Install workload android
-      run: |
-        dotnet workload install android
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.3
-    - name: Set Android version
-      uses: damienaicheh/update-android-version-manifest-action@v1.0.0
-      with:
-        android-manifest-path: ./DeveTPLDataflowVisualizer.MonoGame.Android/AndroidManifest.xml
-        version-name: 1.0.${{needs.generate_version_number.outputs.build_number}}
-        version-code: ${{needs.generate_version_number.outputs.build_number}}
-        print-file: true
-    - name: Restore NuGet packages
-      run: |
-        nuget restore DeveTPLDataflowVisualizer/DeveTPLDataflowVisualizer.csproj
-        nuget restore DeveTPLDataflowVisualizer.MonoGame.Core/DeveTPLDataflowVisualizer.MonoGame.Core.csproj
-        nuget restore DeveTPLDataflowVisualizer.MonoGame.Android/DeveTPLDataflowVisualizer.MonoGame.Android.csproj
-    - name: Build Android
-      run: |
-        #dotnet build DeveTPLDataflowVisualizer.MonoGame.Android/DeveTPLDataflowVisualizer.MonoGame.Android.csproj -c Release --no-restore /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
-        #msbuild /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}} /p:AndroidBuildApplicationPackage=true /p:Configuration=Release /p:AndroidPackageFormat=aab /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=DevedseCert /p:AndroidSigningKeyPass=${{secrets.ANDROIDKEYSTOREPASSWORD}} /p:AndroidSigningKeyStore=DevedseCert.keystore /p:AndroidSigningStorePass=${{secrets.ANDROIDKEYSTOREPASSWORD}} DeveTPLDataflowVisualizer.MonoGame.Android\DeveTPLDataflowVisualizer.MonoGame.Android.csproj
-        msbuild /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}} /p:AndroidBuildApplicationPackage=true /p:Configuration=Release /p:AndroidPackageFormat=aab ${{ github.actor != 'dependabot[bot]' && format('/p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=DevedseCert /p:AndroidSigningKeyPass={0} /p:AndroidSigningKeyStore=DevedseCert.keystore /p:AndroidSigningStorePass={0}', secrets.ANDROIDKEYSTOREPASSWORD) || '' }} DeveTPLDataflowVisualizer.MonoGame.Android\DeveTPLDataflowVisualizer.MonoGame.Android.csproj
-    - name: dotnet test
-      run: dotnet test DeveTPLDataflowVisualizer.Tests/DeveTPLDataflowVisualizer.Tests.csproj -c Release --verbosity normal
-    # - name: Package sources
-    #   run: |
-    #     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=1536m -mfb=273 -ms=on -mqs=on -sccUTF-8 "./Scripts/Output/DeveTPLDataflowVisualizer.MonoGame.Android.7z" "DeveTPLDataflowVisualizer.MonoGame.Android\*" '-x!*.pdb'
-    #   shell: powershell
-    - uses: actions/upload-artifact@v3
-      with:
-        name: DeveTPLDataflowVisualizer.MonoGame.Android_aab
-        path: ./DeveTPLDataflowVisualizer.MonoGame.Android/bin/Release/net7.0-android/devetpldataflowvisualizermonogame_android.devetpldataflowvisualizermonogame_android-Signed.aab
-
-
-  build_windows_AndroidForFireStick:
-    needs: generate_version_number
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 7.0.x
-    - name: Install workload android
-      run: |
-        dotnet workload install android
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.3
-    - name: Set Android version
-      uses: damienaicheh/update-android-version-manifest-action@v1.0.0
-      with:
-        android-manifest-path: ./DeveTPLDataflowVisualizer.MonoGame.Android/AndroidManifest.xml
-        version-name: 1.0.${{needs.generate_version_number.outputs.build_number}}
-        version-code: ${{needs.generate_version_number.outputs.build_number}}
-        print-file: true
-    - name: Restore NuGet packages
-      run: |
-        nuget restore DeveTPLDataflowVisualizer/DeveTPLDataflowVisualizer.csproj
-        nuget restore DeveTPLDataflowVisualizer.MonoGame.Core/DeveTPLDataflowVisualizer.MonoGame.Core.csproj
-        nuget restore DeveTPLDataflowVisualizer.MonoGame.Android/DeveTPLDataflowVisualizer.MonoGame.Android.csproj
-    - name: Build Android
-      run: |
-        #dotnet build DeveTPLDataflowVisualizer.MonoGame.Android/DeveTPLDataflowVisualizer.MonoGame.Android.csproj -c Release --no-restore /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
-        #msbuild /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}} /p:AndroidBuildApplicationPackage=true /p:Configuration=Release /p:AndroidPackageFormat=apk /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=DevedseCert /p:AndroidSigningKeyPass=${{secrets.ANDROIDKEYSTOREPASSWORD}} /p:AndroidSigningKeyStore=DevedseCert.keystore /p:AndroidSigningStorePass=${{secrets.ANDROIDKEYSTOREPASSWORD}} DeveTPLDataflowVisualizer.MonoGame.Android\DeveTPLDataflowVisualizer.MonoGame.Android.csproj
-        msbuild /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}} /p:AndroidBuildApplicationPackage=true /p:Configuration=Release /p:AndroidPackageFormat=apk ${{ github.actor != 'dependabot[bot]' && format('/p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=DevedseCert /p:AndroidSigningKeyPass={0} /p:AndroidSigningKeyStore=DevedseCert.keystore /p:AndroidSigningStorePass={0}', secrets.ANDROIDKEYSTOREPASSWORD) || '' }} DeveTPLDataflowVisualizer.MonoGame.Android\DeveTPLDataflowVisualizer.MonoGame.Android.csproj
-    - name: dotnet test
-      run: dotnet test DeveTPLDataflowVisualizer.Tests/DeveTPLDataflowVisualizer.Tests.csproj -c Release --verbosity normal
-    # - name: Package sources
-    #   run: |
-    #     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=1536m -mfb=273 -ms=on -mqs=on -sccUTF-8 "./Scripts/Output/DeveTPLDataflowVisualizer.MonoGame.Android.7z" "DeveTPLDataflowVisualizer.MonoGame.Android\*" '-x!*.pdb'
-    #   shell: powershell
-    - uses: actions/upload-artifact@v3
-      with:
-        name: DeveTPLDataflowVisualizer.MonoGame.Android_apk
-        path: ./DeveTPLDataflowVisualizer.MonoGame.Android/bin/Release/net7.0-android/devetpldataflowvisualizermonogame_android.devetpldataflowvisualizermonogame_android-Signed.apk
-
-
   release_github:
     needs: [
       generate_version_number,
@@ -438,13 +175,7 @@ jobs:
       build_windows_consoleapp,
       build_windows,
       build_linux,
-      build_docker,
-      build_linux_monogame_desktopgl,
-      build_windows_monogame_desktopgl_onlinux,
-      build_windows_monogame_desktopgl,
-      build_windows_monogame_windowsdx,
-      build_windows_Android,
-      build_windows_AndroidForFireStick]
+      build_docker]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
@@ -478,15 +209,9 @@ jobs:
           ./artifacts/DeveTPLDataflowVisualizerZip/DeveTPLDataflowVisualizer.zip
           ./artifacts/DeveTPLDataflowVisualizerNuGet/*.nupkg
           ./artifacts/DeveTPLDataflowVisualizerNuGet/*.snupkg
-          ./artifacts/DeveTPLDataflowVisualizer.MonoGame.DesktopGL_linux-x64/DeveTPLDataflowVisualizer.MonoGame.DesktopGL_linux-x64.tar.gz
-          ./artifacts/DeveTPLDataflowVisualizer.MonoGame.DesktopGL_win-x64_onlinux/DeveTPLDataflowVisualizer.MonoGame.DesktopGL_win-x64_onlinux.7z
-          ./artifacts/DeveTPLDataflowVisualizer.MonoGame.DesktopGL_win-x64/DeveTPLDataflowVisualizer.MonoGame.DesktopGL_win-x64.7z
-          ./artifacts/DeveTPLDataflowVisualizer.MonoGame.WindowsDX_win-x64/DeveTPLDataflowVisualizer.MonoGame.WindowsDX_win-x64.7z
-          ./artifacts/DeveTPLDataflowVisualizer.MonoGame.Android_aab/devetpldataflowvisualizermonogame_android.devetpldataflowvisualizermonogame_android-Signed.aab
-          ./artifacts/DeveTPLDataflowVisualizer.MonoGame.Android_apk/devetpldataflowvisualizermonogame_android.devetpldataflowvisualizermonogame_android-Signed.apk
-          ./artifacts/DeveTPLDataflowVisualizer.ConsoleApp/DeveMazeGenerator.ConsoleApp.Untrimmed.exe
-          ./artifacts/DeveTPLDataflowVisualizer.ConsoleApp/DeveMazeGenerator.ConsoleApp.Trimmed.exe
-          ./artifacts/DeveTPLDataflowVisualizer.ConsoleApp/DeveMazeGenerator.ConsoleApp.TrimmedAot.exe
+          ./artifacts/DeveTPLDataflowVisualizer.ConsoleApp/DeveTPLDataflowVisualizer.ConsoleApp.Untrimmed.exe
+          ./artifacts/DeveTPLDataflowVisualizer.ConsoleApp/DeveTPLDataflowVisualizer.ConsoleApp.Trimmed.exe
+          ./artifacts/DeveTPLDataflowVisualizer.ConsoleApp/DeveTPLDataflowVisualizer.ConsoleApp.TrimmedAot.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -503,56 +228,3 @@ jobs:
         path: ./artifacts/DeveTPLDataflowVisualizerNuGet/
     - name: Push NuGet
       run: dotnet nuget push ./artifacts/DeveTPLDataflowVisualizerNuGet/DeveTPLDataflowVisualizer.1.0.${{needs.generate_version_number.outputs.build_number}}.nupkg -k ${{ secrets.NUGETTOKEN }} -s https://api.nuget.org/v3/index.json
-
-  codeqlanalyze:
-    runs-on: windows-latest
-    needs: generate_version_number
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'csharp', 'javascript' ]
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 7.0.x
-    - name: Install workload android
-      run: |
-        dotnet workload install android
-
-    - name: Run tree
-      run: tree /A
-
-    # Initializes the CodeQL tools for scanning.
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
-      with:
-        languages: ${{ matrix.language }}
-
-    # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v2
-
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
-      with:
-        output: './artifacts'
-  
-    - name: Run tree2
-      run: |
-        tree /A
-        cd
-  
-    - uses: actions/upload-artifact@v3
-      with:
-        name: CodeQLAnalysis_${{ matrix.language }}
-        path: ./artifacts/${{ matrix.language }}.zip
