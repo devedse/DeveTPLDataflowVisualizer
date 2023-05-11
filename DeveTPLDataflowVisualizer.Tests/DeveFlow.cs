@@ -1,10 +1,10 @@
 ﻿using DLPR.Detection.WholeFlow.TPLDataflowWrappers;
-using System.Collections.Generic;
-using System.Threading.Tasks.Dataflow;
 using System;
-using Xunit;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
+using Xunit;
 
 namespace DeveTPLDataflowVisualizer.Tests
 {
@@ -133,7 +133,7 @@ namespace DeveTPLDataflowVisualizer.Tests
 
             //Assert
             Assert.Equal(outputCount, outputCollection.Count);
-            foreach(var output in outputCollection)
+            foreach (var output in outputCollection)
             {
                 Assert.True(output.Contains("Blahblah"));
             }
