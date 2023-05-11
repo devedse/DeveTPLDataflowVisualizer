@@ -1,5 +1,5 @@
-﻿using DLPR.Detection.WholeFlow.ConsoleVisualizer;
-using DLPR.Detection.WholeFlow.TPLDataflowWrappers;
+﻿using DeveTPLDataflowVisualizer.ConsoleVisualizer;
+using DeveTPLDataflowVisualizer.TPLDataflowWrappers;
 using Spectre.Console;
 using System;
 using System.Collections.Generic;

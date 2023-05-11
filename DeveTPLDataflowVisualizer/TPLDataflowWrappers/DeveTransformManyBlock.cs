@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
-namespace DLPR.Detection.WholeFlow.TPLDataflowWrappers
+namespace DeveTPLDataflowVisualizer.TPLDataflowWrappers
 {
     public class DeveTransformManyBlock<TInput, TOutput> : DeveBaseBlock<TInput, TOutput>, IDeveBaseSourceBlock<TOutput>, IDeveBaseTargetBlock<TInput>
     {

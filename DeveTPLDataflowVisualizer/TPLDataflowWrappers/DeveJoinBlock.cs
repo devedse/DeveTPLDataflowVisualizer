@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks.Dataflow;
 
-namespace DLPR.Detection.WholeFlow.TPLDataflowWrappers
+namespace DeveTPLDataflowVisualizer.TPLDataflowWrappers
 {
     public class DeveJoinBlock<T1, T2> : DeveBaseBlock<Tuple<T1, T2>, Tuple<T1, T2>>, IDeveBaseSourceBlock<Tuple<T1, T2>>
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DLPR.Detection.WholeFlow.TPLDataflowWrappers
+namespace DeveTPLDataflowVisualizer.TPLDataflowWrappers
 {
     public interface IDeveBaseBlock
     {

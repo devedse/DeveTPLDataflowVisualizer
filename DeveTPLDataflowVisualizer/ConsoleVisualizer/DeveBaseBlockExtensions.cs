@@ -1,9 +1,9 @@
-﻿using DLPR.Detection.WholeFlow.TPLDataflowWrappers;
+﻿using DeveTPLDataflowVisualizer.TPLDataflowWrappers;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 using System;
 
-namespace DLPR.Detection.WholeFlow.ConsoleVisualizer
+namespace DeveTPLDataflowVisualizer.ConsoleVisualizer
 {
     public static class DeveBaseBlockExtensions
     {

@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Threading.Tasks.Dataflow;
 
-namespace DLPR.Detection.WholeFlow.TPLDataflowWrappers
+namespace DeveTPLDataflowVisualizer.TPLDataflowWrappers
 {
     public static class DeveDataflowExtensions
     {

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks.Dataflow;
 
-namespace DLPR.Detection.WholeFlow.TPLDataflowWrappers
+namespace DeveTPLDataflowVisualizer.TPLDataflowWrappers
 {
     public class DeveBatchBlock<T> : DeveBaseBlock<T, T[]>, IDeveBaseSourceBlock<T[]>, IDeveBaseTargetBlock<T>
     {

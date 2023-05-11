@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks.Dataflow;
 
-namespace DLPR.Detection.WholeFlow.TPLDataflowWrappers
+namespace DeveTPLDataflowVisualizer.TPLDataflowWrappers
 {
     public class DeveBatchedJoinBlock<T1, T2> : DeveBaseBlock<Tuple<IList<T1>, IList<T2>>, Tuple<IList<T1>, IList<T2>>>, IDeveBaseSourceBlock<Tuple<IList<T1>, IList<T2>>>
     {

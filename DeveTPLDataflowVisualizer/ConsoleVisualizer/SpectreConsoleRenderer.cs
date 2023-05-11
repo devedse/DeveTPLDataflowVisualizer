@@ -1,8 +1,8 @@
-﻿using DLPR.Detection.WholeFlow.TPLDataflowWrappers;
+﻿using DeveTPLDataflowVisualizer.TPLDataflowWrappers;
 using Spectre.Console;
 using System;
 
-namespace DLPR.Detection.WholeFlow.ConsoleVisualizer
+namespace DeveTPLDataflowVisualizer.ConsoleVisualizer
 {
     public static class SpectreConsoleRenderer
     {

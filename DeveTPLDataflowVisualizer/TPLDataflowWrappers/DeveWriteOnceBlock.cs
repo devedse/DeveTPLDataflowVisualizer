@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks.Dataflow;
 
-namespace DLPR.Detection.WholeFlow.TPLDataflowWrappers
+namespace DeveTPLDataflowVisualizer.TPLDataflowWrappers
 {
     public class DeveWriteOnceBlock<T> : DeveBaseBlock<T, T>, IDeveBaseSourceBlock<T>, IDeveBaseTargetBlock<T>
     {
@@ -17,13 +17,13 @@ namespace DLPR.Detection.WholeFlow.TPLDataflowWrappers
 
         public override int? OutputCount => null;
 
-        public DeveWriteOnceBlock(string blockName, Func<T, T>? cloningFunction) : base(blockName)
+        public DeveWriteOnceBlock(string blockName, Func<T, T> cloningFunction) : base(blockName)
         {
             var wrappedCloningFunction = WrapTransform(cloningFunction ?? DefaultCloningFunction);
             _innerBlock = new WriteOnceBlock<T>(wrappedCloningFunction);
         }
 
-        public DeveWriteOnceBlock(string blockName, Func<T, T>? cloningFunction, DataflowBlockOptions dataflowBlockOptions) : base(blockName)
+        public DeveWriteOnceBlock(string blockName, Func<T, T> cloningFunction, DataflowBlockOptions dataflowBlockOptions) : base(blockName)
         {
             var wrappedCloningFunction = WrapTransform(cloningFunction ?? DefaultCloningFunction);
             _innerBlock = new WriteOnceBlock<T>(wrappedCloningFunction, dataflowBlockOptions);
