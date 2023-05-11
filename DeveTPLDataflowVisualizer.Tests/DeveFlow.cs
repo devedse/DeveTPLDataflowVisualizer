@@ -135,7 +135,7 @@ namespace DeveTPLDataflowVisualizer.Tests
             Assert.Equal(outputCount, outputCollection.Count);
             foreach (var output in outputCollection)
             {
-                Assert.True(output.Contains("Blahblah"));
+                Assert.Contains("Blahblah", output);
             }
 
             Console.WriteLine("Completed");
