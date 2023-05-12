@@ -2,7 +2,32 @@
 
 This is a library to easily visualize the progress of a TPL Dataflow in a Console application
 
-![Visualizer](visualizer.gif)
+Usage instructions:
+To use this library you should replace all existing TPL Dataflow block names with Deve*****Block. After that you can use the following piece of code to visualize the different blocks:
+
+```
+_ = Task.Run(async () =>
+{
+    var baume = new Tree("Root");
+    var baumeNode = new TreeNode(new Text("RootNode"));
+    baume.AddNode(baumeNode);
+    AnsiConsole.Live(baume)
+        .Start(ctx =>
+        {
+            while (true)
+            {
+                baumeNode.Nodes.Clear();
+                SpectreConsoleRenderer.SuperBaumenMacher(b1_extractFramesFromVideo, baumeNode, (block) => block == b1_extractFramesFromVideo ? 1 : b1_broadcast.ProcessedCount);
+                ctx.Refresh();
+                Thread.Sleep(50);
+            }
+        });
+});
+```
+
+Also, I'm not even german, I was just in a funny mood when making up the names for the `SuperBaumenMacher`...
+
+![Visualizer](visualizer.gif | width=300)
 
 ## Build status
 
