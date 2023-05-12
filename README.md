@@ -25,7 +25,7 @@ _ = Task.Run(async () =>
 });
 ```
 
-For more information see the [Program.cs](DeveTPLDataflowVisualizer.ConsoleApp/Program.cs) file
+For more information see the example [Program.cs](DeveTPLDataflowVisualizer.ConsoleApp/Program.cs)
 
 Also, I'm not even german, I was just in a funny mood when making up the names for the `SuperBaumenMacher`...
 
