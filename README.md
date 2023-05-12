@@ -1,9 +1,28 @@
 # DeveTPLDataflowVisualizer
 
-This is a library to easily visualize the progress of a TPL Dataflow in a Console application
+This is a library to easily visualize the progress of a TPL Dataflow in a Console application.
+
+<img src="visualizer.gif" width="500">
 
 Usage instructions:
-To use this library you should replace all existing TPL Dataflow block names with Deve*****Block. After that you can use the following piece of code to visualize the different blocks:
+To use this library you should replace all existing TPL Dataflow block names with Deve*****Block. E.g. change:
+
+```
+var blockOld = new TransformManyBlock<int, string>((input) =>
+{
+    return Enumerable.Range(0, input).Select(t => $"Super test: {t}");
+});
+```
+To:
+
+```
+var blockNew = new DeveTransformManyBlock<int, string>("Video -> Frame", (input) =>
+{
+    return Enumerable.Range(0, input).Select(t => $"Super test: {t}");
+});
+```
+
+After that you can use the following piece of code to visualize the different blocks:
 
 ```
 _ = Task.Run(async () =>
@@ -28,8 +47,6 @@ _ = Task.Run(async () =>
 For more information see the example [Program.cs](DeveTPLDataflowVisualizer.ConsoleApp/Program.cs)
 
 Also, I'm not even german, I was just in a funny mood when making up the names for the `SuperBaumenMacher`...
-
-<img src="visualizer.gif" width="500">
 
 ## Build status
 
