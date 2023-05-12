@@ -48,6 +48,10 @@ For more information see the example [Program.cs](DeveTPLDataflowVisualizer.Cons
 
 Also, I'm not even german, I was just in a funny mood when making up the names for the `SuperBaumenMacher`...
 
+## Internal workings
+
+All Deve....Blocks extend the DeveBaseBlock which wraps the internal Actions and counts up all executions of Actions that are being processed / have been processed.
+
 ## Build status
 
 | GitHubActions Builds |
