@@ -27,7 +27,7 @@ _ = Task.Run(async () =>
 
 Also, I'm not even german, I was just in a funny mood when making up the names for the `SuperBaumenMacher`...
 
-![Visualizer](visualizer.gif | width=300)
+<img src="visualizer.gif" width="500">
 
 ## Build status
 
