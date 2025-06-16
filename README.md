@@ -7,7 +7,7 @@ This is a library to easily visualize the progress of a TPL Dataflow in a Consol
 Usage instructions:
 To use this library you should replace all existing TPL Dataflow block names with Deve*****Block. E.g. change:
 
-```
+```csharp
 var blockOld = new TransformManyBlock<int, string>((input) =>
 {
     return Enumerable.Range(0, input).Select(t => $"Super test: {t}");
@@ -15,7 +15,7 @@ var blockOld = new TransformManyBlock<int, string>((input) =>
 ```
 To:
 
-```
+```csharp
 var blockNew = new DeveTransformManyBlock<int, string>("Video -> Frame", (input) =>
 {
     return Enumerable.Range(0, input).Select(t => $"Super test: {t}");
@@ -24,7 +24,7 @@ var blockNew = new DeveTransformManyBlock<int, string>("Video -> Frame", (input)
 
 After that you can use the following piece of code to visualize the different blocks:
 
-```
+```csharp
 _ = Task.Run(async () =>
 {
     var baume = new Tree("Root");
